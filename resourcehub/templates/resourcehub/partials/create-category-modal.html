@@ -1,0 +1,99 @@
+{% comment %}
+This is the template for the modal itself.
+You would typically include this file at the bottom of the page where you want the modal to appear,
+for example, at the end of 'category_list.html'.
+{% endcomment %}
+
+<!-- 
+  Modal Overlay: A full-screen, semi-transparent background. 
+  It's hidden by default with the 'hidden' class.
+-->
+<div id="category-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+
+    <!-- Modal Content -->
+    <div class="relative top-20 mx-auto p-8 border w-full max-w-lg shadow-lg rounded-xl bg-white">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center border-b pb-4 mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">
+                Add New Category
+            </h1>
+            <!-- Close Button (X icon) -->
+            <button type="button" id="close-category-modal-btn" class="text-gray-400 hover:text-gray-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Form -->
+        <form method="post" action="{% url 'resourcehub:create_category' %}">
+            {% csrf_token %}
+
+            <!-- Loop through each field in the form -->
+            {% for field in form %}
+            <div class="mb-6">
+                <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                    {{ field.label }}
+                </label>
+                {{ field }}
+                {% for error in field.errors %}
+                <p class="text-red-500 text-xs italic mt-2">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex justify-end">
+                <!-- The "Cancel" button now closes the modal -->
+                <button type="button" id="cancel-category-modal-btn"
+                    class="text-gray-600 font-bold py-2 px-6 mr-2">Cancel</button>
+                <button type="submit"
+                    class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
+                    Save Category
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle the modal's visibility
+    document.addEventListener('DOMContentLoaded', () => {
+        const categoryModal = document.getElementById('category-modal');
+        // This is the button that will open the modal. You should place it on your list page.
+        const openModalBtn = document.getElementById('open-category-modal-btn');
+        const closeModalBtn = document.getElementById('close-category-modal-btn');
+        const cancelModalBtn = document.getElementById('cancel-category-modal-btn');
+
+        const openModal = () => categoryModal.classList.remove('hidden');
+        const closeModal = () => categoryModal.classList.add('hidden');
+
+        // Event listeners
+        if (openModalBtn) {
+            openModalBtn.addEventListener('click', openModal);
+        }
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelModalBtn.addEventListener('click', closeModal);
+
+        // Close modal if user clicks outside of the modal content
+        window.addEventListener('click', (event) => {
+            if (event.target === categoryModal) {
+                closeModal();
+            }
+        });
+    });
+</script>
+
+{% comment %}
+--- How to use this modal ---
+
+1. Include this file in your list template (e.g., category_list.html):
+{% include "category_form_modal.html" %}
+
+2. Add a button to that same list template to trigger the modal:
+<button type="button" id="open-category-modal-btn" class="bg-blue-600 ...">
+    Add New Category
+</button>
+{% endcomment %}

@@ -1,0 +1,48 @@
+{% extends 'resourcehub/base.html' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-white p-8 rounded-xl shadow-lg">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 border-b pb-4">
+        <!-- The title is set to "Edit" because the UpdateView provides the 'object' -->
+        Edit Category
+    </h1>
+
+    <p class="text-sm text-gray-500 mb-6 -mt-4">
+        You are currently editing: <strong class="font-semibold">{{ object.name }}</strong>
+    </p>
+
+    <!-- 
+      The form posts to the current URL. 
+      The UpdateView handles processing the submitted data.
+    -->
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Loop through each field in the form (in this case, only 'name') -->
+        {% for field in form %}
+        <div class="mb-6">
+            <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                {{ field.label }}
+            </label>
+            <!-- This renders the input, pre-filled with the current category's data -->
+            {{ field }}
+            <!-- Display validation errors if any -->
+            {% for error in field.errors %}
+            <p class="text-red-500 text-xs italic mt-2">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="mt-8 flex justify-end">
+            <!-- The cancel button takes the user back to the category list -->
+            <a href="{% url 'resourcehub:categories' %}" class="text-gray-600 font-bold py-2 px-6 mr-2">Cancel</a>
+            <button type="submit"
+                class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

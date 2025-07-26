@@ -1,0 +1,45 @@
+{% extends 'resourcehub/base.html' %}
+
+{% block title %}Confirm Deletion{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto  bg-white p-8 rounded-xl shadow-lg text-center mt-10">
+
+    <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+        <svg class="h-10 w-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+            </path>
+        </svg>
+    </div>
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">Confirm Deletion</h1>
+    <p class="text-gray-600 mb-6">
+        Are you sure you want to permanently delete the resource:
+        <br>
+        <strong class="text-lg text-red-700 mt-2 block">"{{ object.title }}"</strong>?
+    </p>
+
+    <p class="text-sm text-gray-500 mb-8">This action cannot be undone.</p>
+
+    <!-- The form sends a POST request to the current URL, which is handled by the DeleteView -->
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="flex justify-center space-x-4">
+            <!-- Cancel button takes the user back to the resource list -->
+            <a href="{% url 'resourcehub:resources' %}"
+                class="bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300">
+                Cancel
+            </a>
+
+            <!-- Submit button confirms the deletion -->
+            <button type="submit"
+                class="bg-red-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-red-700 transition duration-300">
+                Yes, Delete
+            </button>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

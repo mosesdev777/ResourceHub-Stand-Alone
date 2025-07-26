@@ -1,0 +1,74 @@
+{% extends 'resourcehub/base.html' %}
+
+{% block title %}Edit Resource{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto  bg-white p-8 rounded-xl shadow-lg">
+
+    <!-- Header Section -->
+    <div class="flex justify-between items-start border-b pb-4 mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">{{ form.instance.title }}</h1>
+            <!-- Display the title of the resource being edited -->
+        </div>
+        <!-- Delete Button (optional but recommended) -->
+        <button type="button" id="open-delete-modal"
+            class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-300 flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                </path>
+            </svg>
+            Delete
+        </button>
+
+        {% include 'resourcehub/partials/delete-modal.html' %}
+    </div>
+
+    <!-- Form -->
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Non-field errors -->
+        {% if form.non_field_errors %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            {% for error in form.non_field_errors %}
+            <p class="font-bold">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Loop through each field in the form -->
+        {% for field in form %}
+        <div class="mb-6">
+            <label for="{{ field.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                {{ field.label }}
+            </label>
+            {{ field }}
+            {% if field.help_text %}
+            <p class="text-gray-600 text-xs italic mt-2">{{ field.help_text }}</p>
+            {% endif %}
+            {% for error in field.errors %}
+            <p class="text-red-500 text-xs italic mt-2">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex justify-end gap-2">
+            <a href="{% url 'resourcehub:resources' %}"
+                class="bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300">
+                Cancel
+            </a>
+            <button type="submit"
+                class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

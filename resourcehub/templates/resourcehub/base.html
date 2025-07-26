@@ -1,0 +1,124 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResourceHub | {% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 font-sans mx-auto" hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
+
+    <div class="flex h-screen">
+        <aside class="w-64 bg-gray-800 text-white flex flex-col p-4">
+            <div class="text-2xl font-bold mb-10 px-2">
+                ResourceHub
+            </div>
+
+            <nav class="flex-grow">
+                <ul class="space-y-2">
+                    <!-- Dashboard Link -->
+                    <li>
+                        <a href="{% url 'resourcehub:dashboard' %}" class="flex items-center px-4 py-2 rounded-md transition duration-200
+                              {% if section == 'dashboard' %}
+                                  bg-gray-700 text-white font-semibold
+                              {% else %}
+                                  text-gray-300 hover:bg-gray-700 hover:text-white
+                              {% endif %}">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                </path>
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <!-- Resources Link -->
+                    <li>
+                        <a href="{% url 'resourcehub:resources' %}" class="flex items-center px-4 py-2 rounded-md transition duration-200
+                            {% if section == 'resources' %}
+                            bg-gray-700 text-white font-semibold
+                            {% else %}
+                            text-gray-300 hover:bg-gray-700 hover:text-white
+                            {% endif %}">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                                </path>
+                            </svg>
+                            <span>Resources</span>
+                        </a>
+                    </li>
+
+                    <!-- Categories Link -->
+                    <li>
+                        <a href="{% url 'resourcehub:categories' %}" class="flex items-center px-4 py-2 rounded-md transition duration-200
+                            {% if section == 'categories' %}
+                            bg-gray-700 text-white font-semibold
+                            {% else %}
+                            text-gray-300 hover:bg-gray-700 hover:text-white
+                            {% endif %}">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z">
+                                </path>
+                            </svg>
+                            <span>Categories</span>
+                        </a>
+                    </li>
+
+                    <!-- Technologies Link -->
+                    <li>
+                        <a href="{% url 'resourcehub:technologies' %}" class="flex items-center px-4 py-2 rounded-md transition duration-200
+                            {% if section == 'technologies' %}
+                            bg-gray-700 text-white font-semibold
+                            {% else %}
+                            text-gray-300 hover:bg-gray-700 hover:text-white
+                            {% endif %}">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25"></path>
+                            </svg>
+                            <span>Technologies</span>
+                        </a>
+                    </li>
+
+                    <!-- Add Resource Link -->
+                    <li>
+                        <a href="{% url 'resourcehub:create_resource' %}" class="flex items-center px-4 py-2 rounded-md transition duration-200
+                            {% if section == 'add_resource' %}
+                            bg-gray-700 text-white font-semibold
+                            {% else %}
+                            text-gray-300 hover:bg-gray-700 hover:text-white
+                            {% endif %}">
+                            <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Add Resource</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </aside>
+
+        <main class="flex-1 p-10 overflow-y-auto ">
+            {% block content %}
+
+            {% endblock %}
+        </main>
+    </div>
+    <script src="{% static 'resourcehub/js/script.js' %}"></script>
+</body>
+
+</html>
