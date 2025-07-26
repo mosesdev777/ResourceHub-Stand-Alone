@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count
 from datetime import timedelta
 from .models import Resource, Category, Technology
 from .forms import ResourceForm, CategoryForm, TechnologyForm
@@ -22,45 +22,51 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        This method is used to gather all the data that will be sent to the template.
-        It's the standard way to add context to a Class-Based View.
+        Gathers all the necessary data for the dashboard template,
+        including KPI stats, recent resources, and chart data.
         """
-        # First, call the base implementation to get the initial context.
         context = super().get_context_data(**kwargs)
 
-        # --- Statistics Calculation ---
-        # The same logic from the function-based view is now here.
-
-        # 1. Total count of all saved resources.
+        # --- KPI Cards Statistics ---
         total_resources = Resource.objects.count()
-
-        # 2. Total count of unique technologies.
         total_technologies = Technology.objects.count()
-
-        # 3. Total count of unique categories.
         total_categories = Category.objects.count()
-
-        # 4. Count of new resources added in the last 30 days.
         thirty_days_ago = timezone.now() - timedelta(days=30)
         new_resources_last_30_days = Resource.objects.filter(
             created_at__gte=thirty_days_ago
         ).count()
 
-        # --- Update Context ---
-        # We add our calculated statistics to the context dictionary.
-        # Using context.update() is a clean way to add multiple items.
+        # --- NEW: Recently Added Resources List ---
+        # Get the 5 most recently created resources.
+        recent_resources = Resource.objects.order_by("-created_at")[:5]
+
+        # --- NEW: Top 5 Technologies Chart Data ---
+        # Use annotate() to add a 'resource_count' field to each Technology object.
+        # This counts the number of related resources for each technology.
+        top_technologies_query = Technology.objects.annotate(
+            resource_count=Count("resource")
+        ).order_by("-resource_count")[
+            :5
+        ]  # Order by the new field and get the top 5.
+
+        # Prepare lists for Chart.js labels (names) and data (counts)
+        top_tech_labels = [tech.name for tech in top_technologies_query]
+        top_tech_data = [tech.resource_count for tech in top_technologies_query]
+
+        # --- Update Context with all the data ---
         context.update(
             {
                 "total_resources": total_resources,
                 "total_technologies": total_technologies,
                 "total_categories": total_categories,
                 "new_resources_last_30_days": new_resources_last_30_days,
+                "recent_resources": recent_resources,
+                "top_tech_labels": top_tech_labels,
+                "top_tech_data": top_tech_data,
                 "section": "dashboard",
-                # Optional: for highlighting the active link
             }
         )
 
-        # Finally, return the updated context.
         return context
 
 

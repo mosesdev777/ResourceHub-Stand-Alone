@@ -78,7 +78,7 @@
 
 <!-- Other dashboard components will go here later -->
 <!-- New Row for Lists and Charts -->
-<div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-1 gap-6">
 
     <!-- Left Column: Recently Added Resources -->
     <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
@@ -100,16 +100,6 @@
             <!-- End of loop -->
         </div>
     </div>
-
-    <!-- Right Column: Top Technologies Chart -->
-    <div class="bg-white p-6 rounded-xl shadow-lg">
-        <h2 class="text-xl font-bold text-gray-800 mb-4">Top Technologies</h2>
-        <!-- The canvas element where a chart library like Chart.js will draw the graph -->
-        <div>
-            <canvas id="topTechChart"></canvas>
-        </div>
-    </div>
-
 </div>
 
 {% endblock %}
